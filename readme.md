@@ -1,5 +1,4 @@
-# PyTorch Implementation of  
-## Gaussian Adaptive Patching Powered Fully-Connected Spatial-Temporal Graph for Multivariate Time-Series Data
+# PyTorch Implementation of Gaussian Adaptive Patching Powered Fully-Connected Spatial-Temporal Graph for Multivariate Time-Series Data
 
 **Authors:**  
 [Yucheng Wang](https://frank-wang-oss.github.io), [Yuecong Xu](https://xuyu0010.github.io/), [Jianfei Yang](https://marsyang.site/),  [Min Wu](https://sites.google.com/site/wumincf/), [Xiaoli Li](https://personal.ntu.edu.sg/xlli/), [Lihua Xie](https://personal.ntu.edu.sg/elhxie/), [Zhenghua Chen](https://zhenghuantu.github.io/)
