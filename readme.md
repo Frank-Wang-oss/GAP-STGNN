@@ -12,8 +12,7 @@
 
 This repository provides the official PyTorch implementation of our proposed framework for multivariate time-series (MTS) modeling.
 
-This work extends our previous AAAI 2024 paper:  
-👉 [FC-STGNN](https://github.com/Frank-Wang-oss/FCSTGNN)
+This work extends our previous AAAI 2024 paper:  👉 [FC-STGNN](https://github.com/Frank-Wang-oss/FCSTGNN)
 
 ---
 
@@ -106,6 +105,12 @@ python main_CLS.py
 ---
 
 ## Dataset Preparation
+
+Place all processed datasets under:
+```
+raw_datasets/
+```
+
 
 ### UCI-HAR
 
