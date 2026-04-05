@@ -399,40 +399,58 @@ def save_data_pt(data, file_name, current_path_in_repo):  # save the data in h5 
     torch.save(data, current_path_in_repo + "/" +file_name +'.pt')
 
     print("Saving dataset {} is Done.".format((file_name)))
-if __name__ == "__main__":
-    window_size = 128
+window_size = 128
 
-    path_to_opportunity_folder = "raw_datasets/OpportunityUCIDataset"
-    current_path_in_repo = "datasets/OpportunityUCIDataset"
+path_to_opportunity_folder = "raw_datasets/OpportunityUCIDataset"
+current_path_in_repo = "datasets/Opportunity"
 
-    df = read_files(current_path_in_repo, path_to_opportunity_folder)
+df = read_files(current_path_in_repo, path_to_opportunity_folder)
+df = data_cleaning(df)  # drop columns, interpolate NaN
 
-    # print('df shape is',df.shape)
-    df = data_cleaning(df)  # drop columns, interpolate NaN
-    # print('df shape is',df.shape)
-
-
-    # loco_filename = "loco_2.h5"  # "loco.h5" is to save locomotion dataset.
-    train_s_1,test_s_1, train_s_2,test_s_2, train_s_3,test_s_3, train_s_4,test_s_4 = segment_locomotion(df, window_size)
-    save_data_pt(train_s_1, 'train_subject_1', current_path_in_repo)
-    save_data_pt(test_s_1, 'test_subject_1', current_path_in_repo)
-    save_data_pt(train_s_2, 'train_subject_2', current_path_in_repo)
-    save_data_pt(test_s_2, 'test_subject_2', current_path_in_repo)
-    save_data_pt(train_s_3, 'train_subject_3', current_path_in_repo)
-    save_data_pt(test_s_3, 'test_subject_3', current_path_in_repo)
-    save_data_pt(train_s_4, 'train_subject_4', current_path_in_repo)
-    save_data_pt(test_s_4, 'test_subject_4', current_path_in_repo)
+# loco_filename = "loco_2.h5"  # "loco.h5" is to save locomotion dataset.
+output_data = segment_locomotion(df, window_size)
 
 
-    # hl_filename = "hl_2.h5"  # "hl.h5" is to save high level dataset
-    # data_hl = segment_high_level(df, window_size)
-    """
-        without subject 5 and subset of sensors:
-            data_hl['inputs'].shape # (34181, 25, 220) -> 34181 windows, 25 timestamps, 220 features (sensors)
-            data_hl['labels'].shape # (34181,) -> 34181 labels
+train_samples = []
+train_labels = []
 
-        with subject 5 and subset of sensors:
-            data_hl['inputs'].shape # (49484, 25, 51)
-            data_hl['labels'].shape # (49484,)
-    """
-    # save_data(data_hl, hl_filename, current_path_in_repo)
+test_samples = []
+test_labels = []
+
+for i, data_i in enumerate(output_data):
+
+    sample_i = data_i['samples']  # shape: (N_i, C, T)
+    label_i = data_i['labels']    # shape: (N_i,)
+
+    if i % 2 == 0:
+        train_samples.append(torch.FloatTensor(sample_i))
+        train_labels.append(torch.LongTensor(label_i))
+    else:
+        test_samples.append(torch.FloatTensor(sample_i))
+        test_labels.append(torch.LongTensor(label_i))        
+# Concatenate all tensors
+train_samples = torch.cat(train_samples, dim=0)  # (N_total, C, T)
+train_labels = torch.cat(train_labels, dim=0)    # (N_total,)
+
+test_samples = torch.cat(test_samples, dim=0)  # (N_total, C, T)
+test_labels = torch.cat(test_labels, dim=0)    # (N_total,)
+
+# Shuffle only the training set
+
+num_samples = train_samples.shape[0]
+indices = torch.randperm(num_samples)
+train_samples = train_samples[indices]
+train_labels = train_labels[indices]
+
+# Save as single .pt file
+train_dict = {
+    'samples': train_samples,
+    'labels': train_labels
+}
+
+test_dict = {
+    'samples': test_samples,
+    'labels': test_labels
+}
+save_data_pt(train_dict,'train',current_path_in_repo)
+save_data_pt(test_dict,'test',current_path_in_repo)
