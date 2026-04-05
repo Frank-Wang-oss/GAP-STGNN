@@ -3,8 +3,8 @@ import scipy.io as scio
 from os import path
 from scipy import signal
 
-path_Extracted = './datasets/ISRUC_S3/ExtractedChannels/'
-path_RawData   = './datasets/ISRUC_S3/RawData/'
+path_Extracted = './raw_daatasets/ISRUC_S3/ExtractedChannels/'
+path_RawData   = './raw_daatasets/ISRUC_S3/RawData/'
 path_output    = './datasets/ISRUC_S3/'
 channels = ['C3_A2', 'C4_A1', 'F3_A2', 'F4_A1', 'O1_A2', 'O2_A1',
             'LOC_A2', 'ROC_A1','X1', 'X2']
