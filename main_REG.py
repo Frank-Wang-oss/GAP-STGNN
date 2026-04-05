@@ -307,7 +307,7 @@ if __name__ == '__main__':
             self.metric_to_maximize = 'test_score'
             self.save_name = 'sweep'
 
-            self.epoch = 100
+            self.epoch = 40
             self.runs = 1
     
     
